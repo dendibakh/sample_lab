@@ -17,11 +17,16 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: echo "$GITHUB_CONTEXT"
 
-    - name: Cache Benchmark library
-      uses: actions/cache@v1
-      with:
-        path: ${{github.workspace}}
-        key: ${{ runner.os }}-googlebenchmark-v1.5.0
+    - name: Build Benchmark library
+      shell: bash
+      working-directory: ${{github.workspace}}
+      run: |
+        git clone https://github.com/google/benchmark.git
+        git clone https://github.com/google/googletest.git benchmark/googletest
+        cd benchmark
+        cmake -E make_directory "build"
+        cmake -E chdir "build" cmake -DCMAKE_BUILD_TYPE=Release ../
+        cmake --build "build" --config Release --parallel 4
 
     - name: Create Solution Build Environment
       run: |
@@ -35,7 +40,7 @@ jobs:
     - name: Build Solution
       working-directory: ${{github.workspace}}/build_solution
       shell: bash
-      run: cmake --build . --config $BUILD_TYPE
+      run: cmake --build . --config $BUILD_TYPE --parallel 2
 
 
     - name: Create Baseline Build Environment
@@ -53,7 +58,7 @@ jobs:
     - name: Build Baseline
       working-directory: ${{github.workspace}}/build_baseline
       shell: bash
-      run: cmake --build . --config $BUILD_TYPE
+      run: cmake --build . --config $BUILD_TYPE --parallel 2
 
        
     - name: Benchmark
