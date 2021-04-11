@@ -1,6 +1,6 @@
 name: CMake
 
-on: [push, pull_request]
+on: [pull_request]
 
 env:
   BUILD_TYPE: Release
@@ -47,7 +47,7 @@ jobs:
       run: |
         cd ${{github.workspace}}/
         ls -l
-        git checkout ${{ github.event.base_ref }}
+        git checkout ${{ github.event.pull_request.base.ref }}
         cmake -E make_directory ${{github.workspace}}/build_baseline
 
     - name: Configure Baseline CMake
