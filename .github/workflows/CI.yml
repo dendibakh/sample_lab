@@ -35,7 +35,7 @@ jobs:
     - name: Configure Solution CMake
       shell: bash
       working-directory: ${{github.workspace}}/build_solution
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS=-I${{github.workspace}}/benchmark/include
 
     - name: Build Solution
       working-directory: ${{github.workspace}}/build_solution
@@ -53,7 +53,7 @@ jobs:
     - name: Configure Baseline CMake
       shell: bash
       working-directory: ${{github.workspace}}/build_baseline
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS=-I${{github.workspace}}/benchmark/include
 
     - name: Build Baseline
       working-directory: ${{github.workspace}}/build_baseline
