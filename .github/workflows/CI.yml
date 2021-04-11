@@ -1,0 +1,60 @@
+name: CMake
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+  BASELINE_BUILD_DIR: build_baseline
+  SOLUTION_BUILD_DIR: build_solution
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+
+    - name: Create Solution Build Environment
+      run: |
+        cmake -E make_directory ${{github.workspace}}/$SOLUTION_BUILD_DIR
+
+    - name: Configure Solution CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/$SOLUTION_BUILD_DIR
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+    - name: Build Solution
+      working-directory: ${{github.workspace}}/$SOLUTION_BUILD_DIR
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+
+    - name: Create Baseline Build Environment
+      run: |
+        cd ${{github.workspace}}/
+        ls -l
+        git checkout ${{ github.event.base_ref }}
+        cmake -E make_directory ${{github.workspace}}/$BASELINE_BUILD_DIR
+
+    - name: Configure Baseline CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/$BASELINE_BUILD_DIR
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+    - name: Build Baseline
+      working-directory: ${{github.workspace}}/$BASELINE_BUILD_DIR
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+       
+    - name: Benchmark
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: |
+         ./$BASELINE_BUILD_DIR/lab
+         ./$SOLUTION_BUILD_DIR/lab
