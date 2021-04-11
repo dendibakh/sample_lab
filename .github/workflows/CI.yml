@@ -17,6 +17,12 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: echo "$GITHUB_CONTEXT"
 
+    - name: Cache Benchmark library
+      uses: actions/cache@v1
+      with:
+        path: ${{github.workspace}}
+        key: ${{ runner.os }}-googlebenchmark-v1.5.0
+
     - name: Create Solution Build Environment
       run: |
         cmake -E make_directory ${{github.workspace}}/build_solution
