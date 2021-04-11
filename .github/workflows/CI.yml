@@ -4,8 +4,6 @@ on: [push, pull_request]
 
 env:
   BUILD_TYPE: Release
-  BASELINE_BUILD_DIR: build_baseline
-  SOLUTION_BUILD_DIR: build_solution
 
 jobs:
   build:
@@ -21,15 +19,15 @@ jobs:
 
     - name: Create Solution Build Environment
       run: |
-        cmake -E make_directory ${{github.workspace}}/$SOLUTION_BUILD_DIR
+        cmake -E make_directory ${{github.workspace}}/build_solution
 
     - name: Configure Solution CMake
       shell: bash
-      working-directory: ${{github.workspace}}/$SOLUTION_BUILD_DIR
+      working-directory: ${{github.workspace}}/build_solution
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
     - name: Build Solution
-      working-directory: ${{github.workspace}}/$SOLUTION_BUILD_DIR
+      working-directory: ${{github.workspace}}/build_solution
       shell: bash
       run: cmake --build . --config $BUILD_TYPE
 
@@ -39,15 +37,15 @@ jobs:
         cd ${{github.workspace}}/
         ls -l
         git checkout ${{ github.event.base_ref }}
-        cmake -E make_directory ${{github.workspace}}/$BASELINE_BUILD_DIR
+        cmake -E make_directory ${{github.workspace}}/build_baseline
 
     - name: Configure Baseline CMake
       shell: bash
-      working-directory: ${{github.workspace}}/$BASELINE_BUILD_DIR
+      working-directory: ${{github.workspace}}/build_baseline
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
     - name: Build Baseline
-      working-directory: ${{github.workspace}}/$BASELINE_BUILD_DIR
+      working-directory: ${{github.workspace}}/build_baseline
       shell: bash
       run: cmake --build . --config $BUILD_TYPE
 
@@ -56,5 +54,5 @@ jobs:
       working-directory: ${{github.workspace}}
       shell: bash
       run: |
-         ./$BASELINE_BUILD_DIR/lab
-         ./$SOLUTION_BUILD_DIR/lab
+         ./build_baseline/lab
+         ./build_solution/lab
