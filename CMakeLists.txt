@@ -10,11 +10,12 @@ else()
 endif()
 
 add_executable(lab bench.cpp solution.cpp)
+add_executable(validate validate.cpp solution.cpp)
 
 find_library(BENCHMARK_LIBRARY NAMES benchmark)
 
 if(NOT MSVC)
     target_link_libraries(lab ${BENCHMARK_LIBRARY} pthread)
 else()
-    target_link_libraries(lab benchmark)
+    target_link_libraries(lab ${BENCHMARK_LIBRARY})
 endif()

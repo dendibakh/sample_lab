@@ -44,6 +44,10 @@ jobs:
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --parallel 2
 
+    - name: Validate Solution
+      working-directory: ${{github.workspace}}/build_solution
+      shell: bash
+      run: ./validate
 
     - name: Create Baseline Build Environment
       run: |

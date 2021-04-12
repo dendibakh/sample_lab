@@ -1,5 +1,4 @@
 #include "benchmark/benchmark.h"
-#include <iostream>
 
 int solution (int* arr, int n);
 
@@ -10,11 +9,6 @@ static void bench1(benchmark::State &state) {
   for (int i = 0; i < N; i++) {
     arr[i] = i + 1;
   }
-  int result = solution(arr, N);
-  if (result != 6)
-    std::cerr << "Validation Failed";
-  else
-    std::cout << "Validation Successful";
 
   // benchmark
   for (auto _ : state) {
