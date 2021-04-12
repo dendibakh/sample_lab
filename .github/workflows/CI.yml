@@ -14,10 +14,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
+    - name: Install Ubuntu deps
+      run: |
+        sudo apt install python3-pip
+        pip3 install scipy
 
     - name: Build Benchmark library
       shell: bash
@@ -67,5 +67,5 @@ jobs:
       working-directory: ${{github.workspace}}
       shell: bash
       run: |
-         ./build_baseline/lab
-         ./build_solution/lab
+         python3 benchmark/tools/compare.py -d results.json benchmarks ./build_baseline/lab ./build_solution/lab --benchmark_min_time=1 
+         python3 buildbot/check_threshold.py -jsonfile results.json -threshold=20
