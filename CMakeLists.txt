@@ -16,6 +16,8 @@ find_library(BENCHMARK_LIBRARY NAMES benchmark)
 
 if(NOT MSVC)
     target_link_libraries(lab ${BENCHMARK_LIBRARY} pthread)
+    target_link_libraries(validate ${BENCHMARK_LIBRARY} pthread)
 else()
     target_link_libraries(lab ${BENCHMARK_LIBRARY})
+    target_link_libraries(validate ${BENCHMARK_LIBRARY})
 endif()
