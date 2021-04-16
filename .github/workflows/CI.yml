@@ -14,10 +14,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install Ubuntu deps
-      run: |
-        sudo apt install -y python3-pip
-        pip3 install scipy
+    #- name: Install Ubuntu deps
+    #  run: |
+    #    sudo apt install -y python3-pip
+    #    pip3 install scipy
 
     - name: Build Benchmark library
       shell: bash
